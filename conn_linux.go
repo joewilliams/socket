@@ -47,3 +47,41 @@ func (c *Conn) SetsockoptSockFprog(level, opt int, fprog *unix.SockFprog) error 
 
 	return os.NewSyscallError(op, err)
 }
+
+func (c *Conn) GetSockoptTpacketStats(level, name int) (*unix.TpacketStats, error) {
+	const op = "getsockopt"
+
+	var (
+		stats *unix.TpacketStats
+		err   error
+	)
+
+	doErr := c.control(op, func(fd int) error {
+		s, err := unix.GetsockoptTpacketStats(int(fd), level, name)
+		stats = s
+		return err
+	})
+	if doErr != nil {
+		return stats, doErr
+	}
+	return stats, os.NewSyscallError(op, err)
+}
+
+func (c *Conn) GetSockoptTpacketStatsV3(level, name int) (*unix.TpacketStatsV3, error) {
+	const op = "getsockopt"
+
+	var (
+		stats *unix.TpacketStatsV3
+		err   error
+	)
+
+	doErr := c.control(op, func(fd int) error {
+		s, err := unix.GetsockoptTpacketStatsV3(int(fd), level, name)
+		stats = s
+		return err
+	})
+	if doErr != nil {
+		return stats, doErr
+	}
+	return stats, os.NewSyscallError(op, err)
+}
