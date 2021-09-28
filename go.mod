@@ -1,4 +1,4 @@
-module github.com/mdlayher/socket
+module github.com/joewilliams/socket
 
 go 1.16
 
